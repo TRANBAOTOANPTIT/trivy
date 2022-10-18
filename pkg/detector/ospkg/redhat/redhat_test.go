@@ -362,6 +362,7 @@ func TestScanner_Detect(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			dbtest.InitDB(t, tt.fixtures)
+			defer func() { _ = dbtest.Close() }()
 
 			s := redhat.NewScanner()
 			got, err := s.Detect(tt.args.osVer, nil, tt.args.pkgs)
@@ -431,6 +432,7 @@ func TestScanner_IsSupportedVersion(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := redhat.NewScanner(redhat.WithClock(fake.NewFakeClock(tt.now)))
+
 			got := s.IsSupportedVersion(tt.args.osFamily, tt.args.osVer)
 			assert.Equal(t, tt.want, got)
 		})

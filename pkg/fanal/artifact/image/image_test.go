@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -130,7 +131,8 @@ func TestArtifact_Inspect(t *testing.T) {
 										},
 										{
 											Name: "musl-utils", Version: "1.1.24-r2", SrcName: "musl",
-											SrcVersion: "1.1.24-r2", Licenses: []string{"MIT", "BSD-3-Clause", "GPL-2.0"},
+											SrcVersion: "1.1.24-r2",
+											Licenses:   []string{"MIT", "BSD-3-Clause", "GPL-2.0"},
 										},
 										{
 											Name: "scanelf", Version: "1.2.4-r0", SrcName: "pax-utils",
@@ -854,7 +856,8 @@ func TestArtifact_Inspect(t *testing.T) {
 										},
 										{
 											Name: "musl-utils", Version: "1.1.24-r2", SrcName: "musl",
-											SrcVersion: "1.1.24-r2", Licenses: []string{"MIT", "BSD-3-Clause", "GPL-2.0"},
+											SrcVersion: "1.1.24-r2",
+											Licenses:   []string{"MIT", "BSD-3-Clause", "GPL-2.0"},
 										},
 										{
 											Name: "scanelf", Version: "1.2.4-r0", SrcName: "pax-utils",
@@ -986,7 +989,8 @@ func TestArtifact_Inspect(t *testing.T) {
 										},
 										{
 											Name: "musl-utils", Version: "1.1.24-r2", SrcName: "musl",
-											SrcVersion: "1.1.24-r2", Licenses: []string{"MIT", "BSD-3-Clause", "GPL-2.0"},
+											SrcVersion: "1.1.24-r2",
+											Licenses:   []string{"MIT", "BSD-3-Clause", "GPL-2.0"},
 										},
 										{
 											Name: "scanelf", Version: "1.2.4-r0", SrcName: "pax-utils",
@@ -1125,7 +1129,7 @@ func TestArtifact_InspectRekorAttestation(t *testing.T) {
 					"test/image@sha256:bc41182d7ef5ffc53a40b044e725193bc10142a1243f395ee852a8d9730fc2ad",
 				},
 			},
-			searchFile: "testdata/rekor-search.json",
+			searchFile: filepath.Join("testdata", "rekor-search.json"),
 			putBlobExpectations: []cache.ArtifactCachePutBlobExpectation{
 				{
 					Args: cache.ArtifactCachePutBlobArgs{
@@ -1178,7 +1182,7 @@ func TestArtifact_InspectRekorAttestation(t *testing.T) {
 					"test/image@sha256:unknown",
 				},
 			},
-			searchFile: "testdata/rekor-search.json",
+			searchFile: filepath.Join("testdata", "rekor-search.json"),
 			artifactOpt: artifact.Option{
 				SBOMSources: []string{"rekor"},
 			},
@@ -1213,12 +1217,12 @@ func TestArtifact_InspectRekorAttestation(t *testing.T) {
 							"392f8ecba72f4326414eaca77bd19bf5f378725d7fd79309605a81b69cc0101f5cd3119d0a216523",
 						},
 					) {
-						http.ServeFile(w, r, "testdata/log-entries.json")
+						http.ServeFile(w, r, filepath.Join("testdata", "log-entries.json"))
 					} else if slices.Equal(
 						params.EntryUUIDs,
 						[]string{"392f8ecba72f4326eb624a7403756250b5f2ad58842a99d1653cd6f147f4ce9eda2da350bd908a55"},
 					) {
-						http.ServeFile(w, r, "testdata/log-entries-no-attestation.json")
+						http.ServeFile(w, r, filepath.Join("testdata", "log-entries-no-attestation.json"))
 					} else {
 						http.Error(w, "something wrong", http.StatusInternalServerError)
 					}
