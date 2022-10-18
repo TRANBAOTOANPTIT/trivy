@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -42,6 +43,9 @@ import (
 )
 
 func TestArtifact_Inspect(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		t.Skip("skipping test on Windows")
+	}
 	tests := []struct {
 		name                    string
 		imagePath               string
