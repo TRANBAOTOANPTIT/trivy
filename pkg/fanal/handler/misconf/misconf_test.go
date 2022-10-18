@@ -89,7 +89,7 @@ func Test_FindingFSTarget(t *testing.T) {
 		},
 		{
 			input:      []string{filepath.Join(string(os.PathSeparator), "home", "user")},
-			wantTarget: "/home/user",
+			wantTarget: filepath.Join("home", "user"),
 			wantPaths:  []string{"."},
 		},
 		{
@@ -97,7 +97,7 @@ func Test_FindingFSTarget(t *testing.T) {
 				filepath.Join(string(os.PathSeparator), "home", "user"),
 				filepath.Join(string(os.PathSeparator), "home", "user", "something"),
 			},
-			wantTarget: filepath.Join(string(os.PathSeparator), "home", "user"),
+			wantTarget: filepath.Join("home", "user"),
 			wantPaths:  []string{".", "/something"},
 		},
 		{
@@ -105,7 +105,7 @@ func Test_FindingFSTarget(t *testing.T) {
 				filepath.Join(string(os.PathSeparator), "home", "user"),
 				filepath.Join(string(os.PathSeparator), "home", "user", "something", "else"),
 			},
-			wantTarget: filepath.Join(string(os.PathSeparator), "home", "user"),
+			wantTarget: filepath.Join("home", "user"),
 			wantPaths:  []string{".", "/something/else"},
 		},
 		{
@@ -113,7 +113,7 @@ func Test_FindingFSTarget(t *testing.T) {
 				filepath.Join(string(os.PathSeparator), "home", "user"),
 				filepath.Join(string(os.PathSeparator), "home", "user2", "something", "else"),
 			},
-			wantTarget: filepath.Join(string(os.PathSeparator), "home"),
+			wantTarget: filepath.Join("home"),
 			wantPaths:  []string{"/user", "/user2/something/else"},
 		},
 		{
@@ -134,10 +134,14 @@ func Test_FindingFSTarget(t *testing.T) {
 		t.Run(fmt.Sprintf("%#v", test.input), func(t *testing.T) {
 
 			if runtime.GOOS == "windows" {
+				cwd, err := os.Getwd()
+				require.NoError(t, err)
+				vol := filepath.VolumeName(cwd)
+
 				if test.wantTarget != "" {
-					test.wantTarget = filepath.Join("C:", test.wantTarget)
+					test.wantTarget = filepath.Join(vol, string(os.PathSeparator), test.wantTarget)
 				} else {
-					test.wantTarget = "C:"
+					test.wantTarget = vol
 				}
 			}
 
