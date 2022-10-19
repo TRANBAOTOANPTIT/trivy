@@ -331,7 +331,7 @@ func TestTerraformMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "terraform", FilePath: ".", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -365,7 +365,7 @@ func TestTerraformMisconfigurationScan(t *testing.T) {
 								}, Warnings: types.MisconfResults(nil), Failures: types.MisconfResults(nil),
 								Exceptions: types.MisconfResults(nil),
 								Layer:      types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
-							}, types.Misconfiguration{
+							}, {
 								FileType: "terraform", FilePath: "main.tf", Successes: types.MisconfResults(nil),
 								Warnings: types.MisconfResults(nil), Failures: types.MisconfResults{
 									types.MisconfResult{
@@ -424,7 +424,7 @@ func TestTerraformMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "terraform", FilePath: ".", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -458,7 +458,7 @@ func TestTerraformMisconfigurationScan(t *testing.T) {
 								}, Warnings: types.MisconfResults(nil), Failures: types.MisconfResults(nil),
 								Exceptions: types.MisconfResults(nil),
 								Layer:      types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
-							}, types.Misconfiguration{
+							}, {
 								FileType: "terraform", FilePath: "main.tf", Successes: types.MisconfResults(nil),
 								Warnings: types.MisconfResults(nil), Failures: types.MisconfResults{
 									types.MisconfResult{
@@ -486,7 +486,7 @@ func TestTerraformMisconfigurationScan(t *testing.T) {
 									},
 								}, Exceptions: types.MisconfResults(nil),
 								Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
-							}, types.Misconfiguration{
+							}, {
 								FileType: "terraform", FilePath: "more.tf", Successes: types.MisconfResults(nil),
 								Warnings: types.MisconfResults(nil), Failures: types.MisconfResults{
 									types.MisconfResult{
@@ -581,7 +581,7 @@ func TestTerraformMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "terraform", FilePath: ".", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -714,7 +714,7 @@ func TestCloudFormationMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "cloudformation", FilePath: "main.yaml", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -940,7 +940,7 @@ func TestCloudFormationMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "cloudformation", FilePath: "main.yaml", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -1723,7 +1723,7 @@ func TestAzureARMMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "azure-arm", FilePath: "deploy.json", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -1811,7 +1811,7 @@ func TestAzureARMMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "azure-arm", FilePath: "deploy.json", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
@@ -1946,7 +1946,7 @@ func TestAzureARMMisconfigurationScan(t *testing.T) {
 						WhiteoutFiles: []string(nil), OS: (*types.OS)(nil), Repository: (*types.Repository)(nil),
 						PackageInfos: []types.PackageInfo(nil), Applications: []types.Application(nil),
 						Misconfigurations: []types.Misconfiguration{
-							types.Misconfiguration{
+							{
 								FileType: "azure-arm", FilePath: "deploy.json", Successes: types.MisconfResults{
 									types.MisconfResult{
 										Namespace: "builtin.aws.rds.aws0176",
