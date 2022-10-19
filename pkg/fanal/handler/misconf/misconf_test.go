@@ -93,7 +93,7 @@ func Test_FindingFSTarget(t *testing.T) {
 		},
 		{
 			input:      []string{filepath.Join(string(os.PathSeparator), "home", "user")},
-			wantTarget: filepath.Join("home", "user"),
+			wantTarget: filepath.Join(string(os.PathSeparator), "home", "user"),
 			wantPaths:  []string{"."},
 		},
 		{
@@ -101,7 +101,7 @@ func Test_FindingFSTarget(t *testing.T) {
 				filepath.Join(string(os.PathSeparator), "home", "user"),
 				filepath.Join(string(os.PathSeparator), "home", "user", "something"),
 			},
-			wantTarget: filepath.Join("home", "user"),
+			wantTarget: filepath.Join(string(os.PathSeparator), "home", "user"),
 			wantPaths:  []string{".", "something"},
 		},
 		{
@@ -109,7 +109,7 @@ func Test_FindingFSTarget(t *testing.T) {
 				filepath.Join(string(os.PathSeparator), "home", "user"),
 				filepath.Join(string(os.PathSeparator), "home", "user", "something", "else"),
 			},
-			wantTarget: filepath.Join("home", "user"),
+			wantTarget: filepath.Join(string(os.PathSeparator), "home", "user"),
 			wantPaths:  []string{".", "something/else"},
 		},
 		{
@@ -117,20 +117,20 @@ func Test_FindingFSTarget(t *testing.T) {
 				filepath.Join(string(os.PathSeparator), "home", "user"),
 				filepath.Join(string(os.PathSeparator), "home", "user2", "something", "else"),
 			},
-			wantTarget: filepath.Join("home"),
+			wantTarget: filepath.Join(string(os.PathSeparator), "home"),
 			wantPaths:  []string{"user", "user2/something/else"},
 		},
 		{
 			input: []string{
 				filepath.Join(string(os.PathSeparator), "foo"), filepath.Join(string(os.PathSeparator), "bar"),
 			},
-			wantTarget: "",
+			wantTarget: string(os.PathSeparator),
 			wantPaths:  []string{"foo", "bar"},
 		},
 		{
 			input:      []string{string(os.PathSeparator), filepath.Join(string(os.PathSeparator), "bar")},
-			wantTarget: "",
-			wantPaths:  []string{"/", "/bar"},
+			wantTarget: string(os.PathSeparator),
+			wantPaths:  []string{".", "bar"},
 		},
 	}
 
