@@ -11,6 +11,9 @@ import (
 	"testing"
 	"time"
 
+	image2 "github.com/aquasecurity/trivy/pkg/fanal/artifact/image"
+	"github.com/aquasecurity/trivy/pkg/fanal/image"
+	"github.com/aquasecurity/trivy/pkg/log"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	fakei "github.com/google/go-containerregistry/pkg/v1/fake"
 	"github.com/sigstore/rekor/pkg/generated/models"
@@ -20,13 +23,6 @@ import (
 	"golang.org/x/xerrors"
 
 	"github.com/aquasecurity/trivy/pkg/fanal/analyzer"
-	"github.com/aquasecurity/trivy/pkg/fanal/artifact"
-	image2 "github.com/aquasecurity/trivy/pkg/fanal/artifact/image"
-	"github.com/aquasecurity/trivy/pkg/fanal/cache"
-	"github.com/aquasecurity/trivy/pkg/fanal/image"
-	"github.com/aquasecurity/trivy/pkg/fanal/types"
-	"github.com/aquasecurity/trivy/pkg/log"
-
 	_ "github.com/aquasecurity/trivy/pkg/fanal/analyzer/command/apk"
 	_ "github.com/aquasecurity/trivy/pkg/fanal/analyzer/config/all"
 	_ "github.com/aquasecurity/trivy/pkg/fanal/analyzer/language/php/composer"
@@ -38,8 +34,11 @@ import (
 	_ "github.com/aquasecurity/trivy/pkg/fanal/analyzer/pkg/dpkg"
 	_ "github.com/aquasecurity/trivy/pkg/fanal/analyzer/repo/apk"
 	_ "github.com/aquasecurity/trivy/pkg/fanal/analyzer/secret"
+	"github.com/aquasecurity/trivy/pkg/fanal/artifact"
+	"github.com/aquasecurity/trivy/pkg/fanal/cache"
 	_ "github.com/aquasecurity/trivy/pkg/fanal/handler/misconf"
 	_ "github.com/aquasecurity/trivy/pkg/fanal/handler/sysfile"
+	"github.com/aquasecurity/trivy/pkg/fanal/types"
 )
 
 func TestArtifact_Inspect(t *testing.T) {
@@ -155,34 +154,28 @@ func TestArtifact_Inspect(t *testing.T) {
 							},
 							Licenses: []types.LicenseFile{
 								{
-									Type:     "license-file",
-									FilePath: "/etc/ssl/misc/CA.pl",
+									Type: "header", FilePath: "/etc/ssl/misc/CA.pl", PkgName: "",
 									Findings: []types.LicenseFinding{
 										{
-											Name:       "OpenSSL",
-											Confidence: 1,
-											Link:       "https://spdx.org/licenses/OpenSSL.html",
+											Category: "", Name: "Copyright", Confidence: 1,
+											Link: "https://spdx.org/licenses/Copyright.html",
 										},
-									},
-									Layer: types.Layer{
-										Digest: "",
-										DiffID: "",
-									},
-								},
-								{
-									Type:     "license-file",
-									FilePath: "/etc/ssl/misc/tsget.pl",
+										{
+											Category: "", Name: "OpenSSL", Confidence: 1,
+											Link: "https://spdx.org/licenses/OpenSSL.html",
+										},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
+								}, {
+									Type: "header", FilePath: "/etc/ssl/misc/tsget.pl", PkgName: "",
 									Findings: []types.LicenseFinding{
 										{
-											Name:       "OpenSSL",
-											Confidence: 1,
-											Link:       "https://spdx.org/licenses/OpenSSL.html",
+											Category: "", Name: "Copyright", Confidence: 1,
+											Link: "https://spdx.org/licenses/Copyright.html",
+										}, {
+											Category: "", Name: "OpenSSL", Confidence: 1,
+											Link: "https://spdx.org/licenses/OpenSSL.html",
 										},
-									},
-									Layer: types.Layer{
-										Digest: "",
-										DiffID: "",
-									},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
 								},
 							},
 							Applications:  []types.Application(nil),
@@ -307,7 +300,10 @@ func TestArtifact_Inspect(t *testing.T) {
 								{
 									FilePath: "var/lib/dpkg/status.d/netbase",
 									Packages: []types.Package{
-										{Name: "netbase", Version: "5.4", SrcName: "netbase", SrcVersion: "5.4"},
+										{
+											Name: "netbase", Version: "5.4", SrcName: "netbase",
+											SrcVersion: "5.4",
+										},
 									},
 								},
 								{
@@ -322,29 +318,26 @@ func TestArtifact_Inspect(t *testing.T) {
 							},
 							Licenses: []types.LicenseFile{
 								{
-									Type:     types.LicenseTypeDpkg,
-									FilePath: "usr/share/doc/base-files/copyright",
+									Type: "dpkg", FilePath: "usr/share/doc/base-files/copyright", PkgName: "base-files",
 									Findings: []types.LicenseFinding{
-										{Name: "GPL-3.0"},
-									},
-									PkgName: "base-files",
-								},
-								{
-									Type:     types.LicenseTypeDpkg,
-									FilePath: "usr/share/doc/ca-certificates/copyright",
+										{
+											Category: "", Name: "GPL-3.0", Confidence: 0, Link: "",
+										},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
+								}, {
+									Type: "dpkg", FilePath: "usr/share/doc/ca-certificates/copyright",
+									PkgName: "ca-certificates", Findings: []types.LicenseFinding{
+										{
+											Category: "", Name: "GPL-2.0", Confidence: 0, Link: "",
+										}, {Category: "", Name: "MPL-2.0", Confidence: 0, Link: ""},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
+								}, {
+									Type: "dpkg", FilePath: "usr/share/doc/netbase/copyright", PkgName: "netbase",
 									Findings: []types.LicenseFinding{
-										{Name: "GPL-2.0"},
-										{Name: "MPL-2.0"},
-									},
-									PkgName: "ca-certificates",
-								},
-								{
-									Type:     types.LicenseTypeDpkg,
-									FilePath: "usr/share/doc/netbase/copyright",
-									Findings: []types.LicenseFinding{
-										{Name: "GPL-2.0"},
-									},
-									PkgName: "netbase",
+										{
+											Category: "", Name: "GPL-2.0", Confidence: 0, Link: "",
+										},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
 								},
 							},
 						},
@@ -401,6 +394,7 @@ func TestArtifact_Inspect(t *testing.T) {
 									Type:     types.LicenseTypeDpkg,
 									FilePath: "usr/share/doc/libssl1.1/copyright",
 									Findings: []types.LicenseFinding{
+										{Name: "Copyright"},
 										{Name: "OpenSSL"},
 									},
 									PkgName: "libssl1.1",
@@ -409,6 +403,7 @@ func TestArtifact_Inspect(t *testing.T) {
 									Type:     types.LicenseTypeDpkg,
 									FilePath: "usr/share/doc/openssl/copyright",
 									Findings: []types.LicenseFinding{
+										{Name: "Copyright"},
 										{Name: "OpenSSL"},
 									},
 									PkgName: "openssl",
@@ -880,26 +875,27 @@ func TestArtifact_Inspect(t *testing.T) {
 							},
 							Licenses: []types.LicenseFile{
 								{
-									Type:     "license-file",
-									FilePath: "/etc/ssl/misc/CA.pl",
+									Type: "header", FilePath: "/etc/ssl/misc/CA.pl", PkgName: "",
 									Findings: []types.LicenseFinding{
 										{
-											Name:       "OpenSSL",
-											Confidence: 1,
-											Link:       "https://spdx.org/licenses/OpenSSL.html",
+											Category: "", Name: "Copyright", Confidence: 1,
+											Link: "https://spdx.org/licenses/Copyright.html",
+										}, {
+											Category: "", Name: "OpenSSL", Confidence: 1,
+											Link: "https://spdx.org/licenses/OpenSSL.html",
 										},
-									},
-								},
-								{
-									Type:     "license-file",
-									FilePath: "/etc/ssl/misc/tsget.pl",
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
+								}, {
+									Type: "header", FilePath: "/etc/ssl/misc/tsget.pl", PkgName: "",
 									Findings: []types.LicenseFinding{
 										{
-											Name:       "OpenSSL",
-											Confidence: 1,
-											Link:       "https://spdx.org/licenses/OpenSSL.html",
+											Category: "", Name: "Copyright", Confidence: 1,
+											Link: "https://spdx.org/licenses/Copyright.html",
+										}, {
+											Category: "", Name: "OpenSSL", Confidence: 1,
+											Link: "https://spdx.org/licenses/OpenSSL.html",
 										},
-									},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
 								},
 							},
 							Applications:  []types.Application(nil),
@@ -1013,26 +1009,27 @@ func TestArtifact_Inspect(t *testing.T) {
 							},
 							Licenses: []types.LicenseFile{
 								{
-									Type:     "license-file",
-									FilePath: "/etc/ssl/misc/CA.pl",
+									Type: "header", FilePath: "/etc/ssl/misc/CA.pl", PkgName: "",
 									Findings: []types.LicenseFinding{
 										{
-											Name:       "OpenSSL",
-											Confidence: 1,
-											Link:       "https://spdx.org/licenses/OpenSSL.html",
+											Category: "", Name: "Copyright", Confidence: 1,
+											Link: "https://spdx.org/licenses/Copyright.html",
+										}, {
+											Category: "", Name: "OpenSSL", Confidence: 1,
+											Link: "https://spdx.org/licenses/OpenSSL.html",
 										},
-									},
-								},
-								{
-									Type:     "license-file",
-									FilePath: "/etc/ssl/misc/tsget.pl",
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
+								}, {
+									Type: "header", FilePath: "/etc/ssl/misc/tsget.pl", PkgName: "",
 									Findings: []types.LicenseFinding{
 										{
-											Name:       "OpenSSL",
-											Confidence: 1,
-											Link:       "https://spdx.org/licenses/OpenSSL.html",
+											Category: "", Name: "Copyright", Confidence: 1,
+											Link: "https://spdx.org/licenses/Copyright.html",
+										}, {
+											Category: "", Name: "OpenSSL", Confidence: 1,
+											Link: "https://spdx.org/licenses/OpenSSL.html",
 										},
-									},
+									}, Layer: types.Layer{Digest: "", DiffID: "", CreatedBy: ""},
 								},
 							},
 							Applications:  []types.Application(nil),
