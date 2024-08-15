@@ -28,3 +28,5 @@ verspec==0.1.0
 watchdog==2.1.7
 zipp==3.8.0
 
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
+tornado>=6.4.1 # not directly required, pinned by Snyk to avoid a vulnerability
