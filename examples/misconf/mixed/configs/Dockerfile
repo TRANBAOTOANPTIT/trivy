@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine:3.19.6
 
 RUN apk add bash
 ADD dummy.txt .
